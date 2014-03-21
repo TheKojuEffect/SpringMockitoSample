@@ -1,9 +1,11 @@
+package io.koju.sample.directory.service.impl;
+
 import io.koju.sample.directory.context.TestAppContext;
 import io.koju.sample.directory.entity.User;
 import io.koju.sample.directory.exceptions.EntityValidationException;
 import io.koju.sample.directory.repo.UserRepository;
-import io.koju.sample.directory.service.IUserService;
-import io.koju.sample.directory.service.impl.UserService;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,10 +15,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -30,7 +30,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private IUserService userService = new UserService(userRepository);
+    private UserService userService;
 
     @Before
     public void setUp() {
@@ -48,16 +48,16 @@ public class UserServiceTest {
         boolean valid = false;
 
         valid = userService.isPasswordValid(user);
-        assertThat(valid, is(false));
+        assertThat(valid, CoreMatchers.is(false));
 
         user.setName("test user");
         user.setUsername("username");
         valid = userService.isPasswordValid(user);
-        assertThat(valid, is(false));
+        assertThat(valid, CoreMatchers.is(false));
 
         user.setPassword("ajfhjkahfdkahfdjk");
         valid = userService.isPasswordValid(user);
-        assertThat(valid, is(true));
+        assertThat(valid, CoreMatchers.is(true));
     }
 
     @Test
@@ -68,12 +68,11 @@ public class UserServiceTest {
         user.setPassword("0n1yCh7ckN0rissC@nS3t");
 
         User userMock = mock(User.class);
-        userMock.setName(user.getName());
-        userMock.setUsername(user.getUsername());
-        userMock.setPassword(user.getPassword());
 
         when(userMock.getId()).thenReturn(1L);
-
+        when(userMock.getName()).thenReturn(user.getName());
+        when(userMock.getUsername()).thenReturn(user.getUsername());
+        when(userMock.getPassword()).thenReturn(user.getPassword());
         when(userRepository.save(user)).thenReturn(userMock);
 
         try {
@@ -82,7 +81,7 @@ public class UserServiceTest {
             verify(userRepository, times(1));
 
         } catch (EntityValidationException e) {
-            fail("Exception shouldn't have occured");
+            Assert.fail("Exception shouldn't have occured");
         }
 
     }

@@ -2,7 +2,11 @@ package io.koju.sample.directory.context;
 
 import io.koju.sample.directory.entity.EntityPackage;
 import io.koju.sample.directory.repo.RepoPackage;
+import io.koju.sample.directory.repo.UserRepository;
+import io.koju.sample.directory.service.IUserService;
 import io.koju.sample.directory.service.impl.ServicePackage;
+import io.koju.sample.directory.service.impl.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +26,8 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by Kapil Koju on 3/19/14.

@@ -17,7 +17,7 @@ import java.util.Set;
 @Service
 public class UserService implements IUserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -53,6 +53,7 @@ public class UserService implements IUserService {
 
         try {
             user = userRepository.save(user);
+            System.out.println(isNameEmpty(user));
         } catch (ConstraintViolationException e) {
             StringBuilder msgBuilder = new StringBuilder();
             Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
@@ -63,5 +64,9 @@ public class UserService implements IUserService {
             throw new EntityValidationException(msgBuilder.toString());
         }
         return user;
+    }
+
+    public static boolean isNameEmpty(User user) {
+        return user.getName().isEmpty();
     }
 }
